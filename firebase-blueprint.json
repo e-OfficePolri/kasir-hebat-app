@@ -1,0 +1,95 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "Inventory product item in POS",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string", "maxLength": 100 },
+        "barcode": { "type": "string", "maxLength": 100 },
+        "price": { "type": "number" },
+        "costPrice": { "type": "number" },
+        "stock": { "type": "number" },
+        "unit": { "type": "string", "maxLength": 50 },
+        "minStockAlert": { "type": "number" },
+        "ownerId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "category", "barcode", "price", "stock", "unit", "ownerId"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Sales transaction recorded at checkout",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "receiptNumber": { "type": "string", "maxLength": 100 },
+        "timestamp": { "type": "string" },
+        "items": { "type": "array" },
+        "subtotal": { "type": "number" },
+        "tax": { "type": "number" },
+        "discount": { "type": "number" },
+        "total": { "type": "number" },
+        "paymentMethod": { "type": "string", "maxLength": 50 },
+        "amountPaid": { "type": "number" },
+        "change": { "type": "number" },
+        "cashierName": { "type": "string", "maxLength": 100 },
+        "ownerId": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "receiptNumber", "timestamp", "items", "subtotal", "total", "paymentMethod", "ownerId"]
+    },
+    "StoreSettings": {
+      "title": "StoreSettings",
+      "description": "Store configuration and receipt preferences",
+      "type": "object",
+      "properties": {
+        "storeName": { "type": "string", "maxLength": 150 },
+        "address": { "type": "string", "maxLength": 300 },
+        "phone": { "type": "string", "maxLength": 50 },
+        "receiptFooter": { "type": "string", "maxLength": 300 },
+        "ownerId": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["storeName", "ownerId"]
+    },
+    "Subscription": {
+      "title": "Subscription",
+      "description": "User license subscription status and payment records",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "userEmail": { "type": "string", "maxLength": 200 },
+        "storeName": { "type": "string", "maxLength": 200 },
+        "planId": { "type": "string", "enum": ["monthly", "yearly", "lifetime"] },
+        "amount": { "type": "number" },
+        "paymentMethod": { "type": "string", "maxLength": 50 },
+        "status": { "type": "string", "enum": ["pending", "active", "expired"] },
+        "activatedAt": { "type": "string" },
+        "expiresAt": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "userEmail", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Collection of retail inventory products"
+    },
+    "/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Collection of completed checkout transactions"
+    },
+    "/stores/{storeId}": {
+      "schema": "StoreSettings",
+      "description": "Store settings and cashier parameters"
+    },
+    "/subscriptions/{subId}": {
+      "schema": "Subscription",
+      "description": "User subscription license records"
+    }
+  }
+}

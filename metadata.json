@@ -1,0 +1,6 @@
+{
+  "name": "KasirPro - Kasir & Stok Otomatis",
+  "description": "Aplikasi kasir modern (Point of Sale) untuk mencatat transaksi penjualan harian, cetak struk belanja, dan manajemen stok otomatis.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

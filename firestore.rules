@@ -1,0 +1,61 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    function isDeveloper() {
+      return isSignedIn() && (
+        request.auth.token.email == 'irfannrmdnn@gmail.com' ||
+        request.auth.token.email == 'irfan.setum@gmail.com'
+      );
+    }
+
+    // Products collection: Users can read and write their own store products
+    match /products/{productId} {
+      allow read: if isSignedIn();
+      allow create: if (isSignedIn() && isValidId(productId) && request.resource.data.ownerId == request.auth.uid) || isDeveloper();
+      allow update: if (isSignedIn() && isValidId(productId) && resource.data.ownerId == request.auth.uid) || isDeveloper();
+      allow delete: if (isSignedIn() && isValidId(productId) && resource.data.ownerId == request.auth.uid) || isDeveloper();
+    }
+
+    // Transactions collection: Authenticated cashiers/owners can record and read transactions
+    match /transactions/{transactionId} {
+      allow read: if isSignedIn();
+      allow create: if (isSignedIn() && isValidId(transactionId) && request.resource.data.ownerId == request.auth.uid) || isDeveloper();
+      allow update: if (isSignedIn() && isValidId(transactionId) && resource.data.ownerId == request.auth.uid) || isDeveloper();
+      allow delete: if (isSignedIn() && isValidId(transactionId) && resource.data.ownerId == request.auth.uid) || isDeveloper();
+    }
+
+    // Stores collection: Store settings
+    match /stores/{storeId} {
+      allow read: if isSignedIn();
+      allow create, update: if (isSignedIn() && isValidId(storeId) && request.resource.data.ownerId == request.auth.uid) || isDeveloper();
+      allow delete: if (isSignedIn() && isValidId(storeId) && resource.data.ownerId == request.auth.uid) || isDeveloper();
+    }
+
+    // Subscriptions collection:
+    // Any signed-in user can create/read their own subscription; developer has full access to verify/activate
+    match /subscriptions/{subId} {
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.userEmail == request.auth.token.email || isDeveloper());
+      allow create: if isSignedIn() && isValidId(subId) && (request.resource.data.userId == request.auth.uid || isDeveloper());
+      allow update, delete: if isDeveloper();
+    }
+
+    // Test connection doc for connection verification
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+  }
+}

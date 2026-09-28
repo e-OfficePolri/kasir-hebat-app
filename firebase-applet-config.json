@@ -1,0 +1,12 @@
+{
+  "projectId": "kasir-hebat",
+  "appId": "1:214439087409:web:5c5e7e0be31d6b53dff410",
+  "apiKey": "AIzaSyDVKVVrFlis5XYm4T-nEbxkvlFi9SndDMI",
+  "authDomain": "kasir-hebat.firebaseapp.com",
+  "firestoreDatabaseId": "(default)",
+  "storageBucket": "kasir-hebat.firebasestorage.app",
+  "messagingSenderId": "214439087409",
+  "measurementId": "",
+  "oAuthClientId": "",
+  "recaptchaSiteKey": ""
+}
